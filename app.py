@@ -51,7 +51,7 @@ if (selected == 'BH Price Prediction'):
     bhk=st.slider('Select Required BHK', 1, 8)
     
     # code for Prediction
-    df=pd.read_csv("F:/DS Files/BHP ML Prediction/bhp_final_data_for_training.csv")
+    df=pd.read_csv("https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/bhp_final_data_for_training.csv")
     x = df.drop(["price"],axis='columns')
     y = df.price
     

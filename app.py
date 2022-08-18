@@ -82,7 +82,7 @@ if (selected == 'Home Page'):
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-    local_css("https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/style/style.css")
+    local_css("style/style.css")
 
     
     # ---- HEADER SECTION ----

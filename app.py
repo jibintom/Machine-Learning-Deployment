@@ -12,7 +12,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import math
-from annotated_text import annotated_text 
 from streamlit_lottie import st_lottie
 import requests
 from streamlit_lottie import st_lottie_spinner
@@ -80,7 +79,7 @@ if (selected == 'Home Page'):
     st_lottie(lottie_welcome, loop=True, key='home', height=430)
     # Use local CSS
     def local_css(file_name):
-        with open("F:\DS Files\BHP ML Prediction\style\style.css") as f:
+        with open("https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/style/style.css") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     local_css("style/style.css")

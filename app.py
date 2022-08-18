@@ -26,8 +26,12 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-lottie_url_welcome = "https://assets10.lottiefiles.com/packages/lf20_puciaact.json"
-lottie_welcome = load_lottieurl(lottie_url_welcome)
+def load_lottiefile(filepath: str):
+    with open(filepath, "r") as f:
+        return json.load(f)
+    
+    
+lottie_welcome = load_lottiefile("lottie/welcome.json")
 lottie_url_home = "https://assets6.lottiefiles.com/private_files/lf30_p5tali1o.json"
 lottie_home = load_lottieurl(lottie_url_home)
 lottie_url_diabetic = "https://assets4.lottiefiles.com/packages/lf20_tbjuenb2.json"

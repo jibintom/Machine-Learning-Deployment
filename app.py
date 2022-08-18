@@ -79,10 +79,10 @@ if (selected == 'Home Page'):
     st_lottie(lottie_welcome, loop=True, key='home', height=430)
     # Use local CSS
     def local_css(file_name):
-        with open("https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/style/style.css") as f:
+        with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-    local_css("style/style.css")
+    local_css(""https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/style/style.css"")
 
     
     # ---- HEADER SECTION ----
@@ -186,7 +186,7 @@ if (selected == 'BH Price Prediction'):
     bhk=st.slider('Select Required BHK', 1, 8)
     
     # code for Prediction
-    df=pd.read_csv("F:/DS Files/BHP ML Prediction/bhp_final_data_for_training.csv")
+    df=pd.read_csv("https://raw.githubusercontent.com/jibintom/Machine-Learning-Deployment-Using-Streamlit/main/bhp_final_data_for_training.csv")
     x = df.drop(["price"],axis='columns')
     y = df.price
     

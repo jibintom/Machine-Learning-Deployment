@@ -33,17 +33,12 @@ def load_lottiefile(filepath: str):
     
     
 lottie_welcome = load_lottiefile("lottie/welcome.json")
-lottie_url_home = "https://assets6.lottiefiles.com/private_files/lf30_p5tali1o.json"
-lottie_home = load_lottieurl(lottie_url_home)
-lottie_url_diabetic = "https://assets4.lottiefiles.com/packages/lf20_tbjuenb2.json"
-lottie_diabetic = load_lottieurl(lottie_url_diabetic)
-lottie_url_heart = "https://assets2.lottiefiles.com/packages/lf20_YO8gSl.json"
-lottie_heart = load_lottieurl(lottie_url_heart)
-lottie_url_parkinson = "https://assets7.lottiefiles.com/packages/lf20_gkgqj2yq.json"
-lottie_parkinson = load_lottieurl(lottie_url_parkinson)
-lottie_coding = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_w51pcehl.json")
-lottie_url_download = "https://assets9.lottiefiles.com/packages/lf20_YSMTHj.json"
-lottie_download = load_lottieurl(lottie_url_download)
+lottie_home = load_lottiefile("lottie/home.json")
+lottie_diabetic = load_lottiefile("lottie/diabetic.json")
+lottie_heart = load_lottiefile("lottie/heart.json")
+lottie_parkinson = load_lottiefile("lottie/parkinson.json")
+lottie_coding = load_lottiefile("lottie/coding.json")
+lottie_download = load_lottiefile("lottie/download.json")
 
 #change default page name and icon
 st.set_page_config(page_title="Max Machine Learning Projects", page_icon=":dragon:", layout="wide")

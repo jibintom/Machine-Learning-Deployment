@@ -21,6 +21,7 @@ import joblib
 import cv2
 import pywt
 import plotly.graph_objects as go
+from PIL import Image
 
 
 #adding animations using lottie

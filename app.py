@@ -232,7 +232,57 @@ if (selected == 'Facial Recognition'):
     st.title(":two_women_holding_hands:Facial Recognition using ML")
 
 
+    def main():
+        """Face Recognition App"""
+        st.write(" ")
 
+        html_temp = """
+        <body style="background-color:red;">
+        <div style="background-color:teal ;padding:10px">
+        <h2 style="color:white;text-align:center;">Face Recognition WebApp</h2>
+        </div>
+        </body>
+        """
+        st.markdown(html_temp, unsafe_allow_html=True)
+
+        image_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
+        if image_file is not None:
+           our_image = Image.open(image_file)
+
+        if st.button("Recognise"):
+            result,result_img,person,score= classify_image(our_image)
+            st.title("Image")
+            st.image(result_img)
+
+
+            st.title("Result")
+            if person==None:
+                st.subheader(result)
+
+            elif score> 48.9:
+
+                df=pd.DataFrame(result)
+                st.header(person)
+                fig = go.Figure(data=[go.Table(
+                    header=dict(values=list(df.columns),
+                                line_color='darkslategray',
+                                fill_color='steelblue',
+                                align='left'),
+                    cells=dict(values=[df.Person,df["Probability Score"]],
+                               line_color='darkmagenta',
+                               fill_color='tomato',
+                               align='left'))
+                    ])
+                fig.update_layout(width=1000, height=800)
+                st.write(fig)
+            else:
+
+                return st.subheader("The given image is not available in the data set. Try a new one")
+
+
+
+    if __name__ == '__main__':
+        main()
 
     #wavlet
 
@@ -385,57 +435,7 @@ if (selected == 'Facial Recognition'):
 
 
 
-    def main():
-        """Face Recognition App"""
-        st.write(" ")
-
-        html_temp = """
-        <body style="background-color:red;">
-        <div style="background-color:teal ;padding:10px">
-        <h2 style="color:white;text-align:center;">Face Recognition WebApp</h2>
-        </div>
-        </body>
-        """
-        st.markdown(html_temp, unsafe_allow_html=True)
-
-        image_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
-        if image_file is not None:
-           our_image = Image.open(image_file)
-
-        if st.button("Recognise"):
-            result,result_img,person,score= classify_image(our_image)
-            st.title("Image")
-            st.image(result_img)
-
-
-            st.title("Result")
-            if person==None:
-                st.subheader(result)
-
-            elif score> 48.9:
-
-                df=pd.DataFrame(result)
-                st.header(person)
-                fig = go.Figure(data=[go.Table(
-                    header=dict(values=list(df.columns),
-                                line_color='darkslategray',
-                                fill_color='steelblue',
-                                align='left'),
-                    cells=dict(values=[df.Person,df["Probability Score"]],
-                               line_color='darkmagenta',
-                               fill_color='tomato',
-                               align='left'))
-                    ])
-                fig.update_layout(width=1000, height=800)
-                st.write(fig)
-            else:
-
-                return st.subheader("The given image is not available in the data set. Try a new one")
-
-
-
-    if __name__ == '__main__':
-        main()
+    
 
 
 

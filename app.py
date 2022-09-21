@@ -234,9 +234,9 @@ if (selected == 'Facial Recognition'):
 
 
 
-    #wavlet
+#wavlet
 
-    def w2d(img, mode='haar', level=1):
+def w2d(img, mode='haar', level=1):
     imArray = img
     #Datatype conversions
     #convert to grayscale
@@ -260,183 +260,182 @@ if (selected == 'Facial Recognition'):
 
 
 
-    #predict function
-    __class_name_to_number = {}
-    __class_number_to_name = {}
+#predict function
+__class_name_to_number = {}
+__class_number_to_name = {}
 
-    __model = None
+__model = None
 
-    def classify_image(our_image, file_path=None):
+def classify_image(our_image, file_path=None):
     result = []
     result_img=[]
     person=[]
     score=[]
     imgs = get_cropped_image_if_2_eyes(file_path, our_image)
     if (len(imgs)==0):
-    result="The eyes and face are not properly visible in the given image. Try with another one."
-    result_img=our_image
-    person=None
-    score=None
-    return result,result_img,person,score
+       result="The eyes and face are not properly visible in the given image. Try with another one."
+       result_img=our_image
+       person=None
+       score=None
+       return result,result_img,person,score
 
     else:
-    for img in imgs:
-        scalled_raw_img = cv2.resize(img, (32, 32))
-        img_har = w2d(img, 'db1', 5)
-        scalled_img_har = cv2.resize(img_har, (32, 32))
-        combined_img = np.vstack((scalled_raw_img.reshape(32 * 32 * 3, 1), scalled_img_har.reshape(32 * 32, 1)))
+        for img in imgs:
+            scalled_raw_img = cv2.resize(img, (32, 32))
+            img_har = w2d(img, 'db1', 5)
+            scalled_img_har = cv2.resize(img_har, (32, 32))
+            combined_img = np.vstack((scalled_raw_img.reshape(32 * 32 * 3, 1), scalled_img_har.reshape(32 * 32, 1)))
+        
+            len_image_array = 32*32*3 + 32*32
+        
+            final = combined_img.reshape(1,len_image_array).astype(float)
+            
+            
+            person=class_number_to_name(__model.predict(final)[0])
+            score=max(np.around(__model.predict_proba(final)*100,2).tolist()[0])
+            result.append({
+                'Person': class_number_to_name(__model.predict(final)[0]),
+                'Probability Score': max(np.around(__model.predict_proba(final)*100,2).tolist()[0])
+                
+            })
+            img2 = np.array(our_image.convert('RGB'))
+            gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+        # Detect faces
+            faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        # Draw rectangle around the faces
+            name='Unknown'
+            for (x, y, w, h) in faces:
+          # To draw a rectangle in a face
+              cv2.rectangle(img2, (x, y), (x + w, y + h), (255, 255, 0), 2)
+              
+            if (score> 48.9):
+                  name = class_number_to_name(__model.predict(final)[0])
+                  result_img=cv2.putText(img2, name, (x, y + h), cv2.FONT_HERSHEY_COMPLEX_SMALL,3.0,(0, 0, 255),3 )
+                  #status=final_result,"with a probality of ", score
+                  #final
+                  #score
+                  
+            elif (score<48.9):
+                  result_img=cv2.putText(img2, 'Unknown', (x, y + h), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3.0, (0, 0, 255),3)
+                  
+            
+        
+        return result,result_img,person,score
+    
+    
 
-        len_image_array = 32*32*3 + 32*32
-
-        final = combined_img.reshape(1,len_image_array).astype(float)
-
-
-        person=class_number_to_name(__model.predict(final)[0])
-        score=max(np.around(__model.predict_proba(final)*100,2).tolist()[0])
-        result.append({
-            'Person': class_number_to_name(__model.predict(final)[0]),
-            'Probability Score': max(np.around(__model.predict_proba(final)*100,2).tolist()[0])
-
-        })
-        img2 = np.array(our_image.convert('RGB'))
-        gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-    # Detect faces
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-    # Draw rectangle around the faces
-        name='Unknown'
-        for (x, y, w, h) in faces:
-      # To draw a rectangle in a face
-          cv2.rectangle(img2, (x, y), (x + w, y + h), (255, 255, 0), 2)
-
-        if (score> 48.9):
-              name = class_number_to_name(__model.predict(final)[0])
-              result_img=cv2.putText(img2, name, (x, y + h), cv2.FONT_HERSHEY_COMPLEX_SMALL,3.0,(0, 0, 255),3 )
-              #status=final_result,"with a probality of ", score
-              #final
-              #score
-
-        elif (score<48.9):
-              result_img=cv2.putText(img2, 'Unknown', (x, y + h), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3.0, (0, 0, 255),3)
-
-
-
-    return result,result_img,person,score
-
-
-
-    def class_number_to_name(class_num):
+def class_number_to_name(class_num):
     return __class_number_to_name[class_num]
 
-    def load_saved_artifacts():
+def load_saved_artifacts():
     print("loading saved artifacts...start")
     global __class_name_to_number
     global __class_number_to_name
 
     with open(r'./Face Recognition/artifacts/class_dictionary.json' , "r") as f:
-    __class_name_to_number = json.load(f)
-    __class_number_to_name = {v:k for k,v in __class_name_to_number.items()}
+        __class_name_to_number = json.load(f)
+        __class_number_to_name = {v:k for k,v in __class_name_to_number.items()}
 
     global __model
     if __model is None:
-    with open(r'./Face Recognition/artifacts/saved_model.pkl', 'rb') as f:
-        __model = joblib.load(f)
-
+        with open(r'./Face Recognition/artifacts/saved_model.pkl', 'rb') as f:
+            __model = joblib.load(f)
+            
     print("loading saved artifacts...done")
 
 
-    def get_cv2_image_from_base64_string(our_image):
-
+def get_cv2_image_from_base64_string(our_image):
+  
     img = np.array(our_image.convert('RGB'))
     return img
 
-    def get_cropped_image_if_2_eyes(image_path, our_image):
+def get_cropped_image_if_2_eyes(image_path, our_image):
     global face_cascade
     global eye_cascade
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
     if image_path:
-    img = cv2.imread(image_path)
+        img = cv2.imread(image_path)
     else:
-    img = get_cv2_image_from_base64_string(our_image)
+        img = get_cv2_image_from_base64_string(our_image)
     global gray
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     global faces
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-
+    
 
     cropped_faces = []
     for (x,y,w,h) in faces:
-        global roi_gray
-        roi_gray = gray[y:y+h, x:x+w]
-        global roi_color
-        roi_color = img[y:y+h, x:x+w]
-        eyes = eye_cascade.detectMultiScale(roi_gray)
-        if len(eyes) >= 2:
-            cropped_faces.append(roi_color)
+            global roi_gray
+            roi_gray = gray[y:y+h, x:x+w]
+            global roi_color
+            roi_color = img[y:y+h, x:x+w]
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+            if len(eyes) >= 2:
+                cropped_faces.append(roi_color)
     return cropped_faces
 
 
 
 
 
-    if __name__ == '__main__':
+if __name__ == '__main__':
     load_saved_artifacts()
 
 
-
+   
     def main():
-    """Face Recognition App"""
-    st.write(" ")
+        """Face Recognition App"""
+        st.write(" ")
 
-    html_temp = """
-    <body style="background-color:red;">
-    <div style="background-color:teal ;padding:10px">
-    <h2 style="color:white;text-align:center;">Face Recognition WebApp</h2>
-    </div>
-    </body>
-    """
-    st.markdown(html_temp, unsafe_allow_html=True)
+        html_temp = """
+        <body style="background-color:red;">
+        <div style="background-color:teal ;padding:10px">
+        <h2 style="color:white;text-align:center;">Face Recognition WebApp</h2>
+        </div>
+        </body>
+        """
+        st.markdown(html_temp, unsafe_allow_html=True)
 
-    image_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
-    if image_file is not None:
-    our_image = Image.open(image_file)
+        image_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
+        if image_file is not None:
+           our_image = Image.open(image_file)
 
-    if st.button("Recognise"):
-    result,result_img,person,score= classify_image(our_image)
-    st.title("Image")
-    st.image(result_img)
+        if st.button("Recognise"):
+            result,result_img,person,score= classify_image(our_image)
+            st.title("Image")
+            st.image(result_img)
 
 
-    st.title("Result")
-    if person==None:
-        st.subheader(result)
+            st.title("Result")
+            if person==None:
+                st.subheader(result)
 
-    elif score> 48.9:
+            elif score> 48.9:
 
-        df=pd.DataFrame(result)
-        st.header(person)
-        fig = go.Figure(data=[go.Table(
-            header=dict(values=list(df.columns),
-                        line_color='darkslategray',
-                        fill_color='steelblue',
-                        align='left'),
-            cells=dict(values=[df.Person,df["Probability Score"]],
-                       line_color='darkmagenta',
-                       fill_color='tomato',
-                       align='left'))
-            ])
-        fig.update_layout(width=1000, height=800)
-        st.write(fig)
-    else:
+                df=pd.DataFrame(result)
+                st.header(person)
+                fig = go.Figure(data=[go.Table(
+                    header=dict(values=list(df.columns),
+                                line_color='darkslategray',
+                                fill_color='steelblue',
+                                align='left'),
+                    cells=dict(values=[df.Person,df["Probability Score"]],
+                               line_color='darkmagenta',
+                               fill_color='tomato',
+                               align='left'))
+                    ])
+                fig.update_layout(width=1000, height=800)
+                st.write(fig)
+            else:
 
-        return st.subheader("The given image is not available in the data set. Try a new one")
+                return st.subheader("The given image is not available in the data set. Try a new one")
 
 
 
     if __name__ == '__main__':
-    main()
-
-
-
+        main()
+    
+    
 

@@ -229,7 +229,7 @@ if (selected == 'BH Price Prediction'):
 if (selected == 'Facial Recognition'):
    
     # page title
-    st.title(":two_women_holding_hands:Facial Recognition using ML")
+    st.title(":camera:Facial Recognition using ML")
 
 
     
@@ -396,6 +396,23 @@ if (selected == 'Facial Recognition'):
         </body>
         """
         st.markdown(html_temp, unsafe_allow_html=True)
+        with st.container():
+            st.write("---")
+            left_column, right_column = st.columns(2)
+            with left_column:
+                st.header(":mag:Test with....")
+                st.write("##")
+                st.write(
+                    """
+                    - :person_with_ball:**Lionel Messi**
+                    - :person_with_ball:**Ronaldo**
+                    - :male-technologist:**Steve Jobs**
+                    - :male-technologist: **Elon Musk**
+                    - :film_projector: **Mohanlal**
+                    - :film_projector: **Mamootty**
+                    
+                    """
+                    )
 
         image_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
         if image_file is not None:
